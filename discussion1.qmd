@@ -1,0 +1,53 @@
+---
+title: "EDS 223 - Discussion Week 1"
+author: "Josephine Cardelle"
+format: html
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r}
+# Load in libraries
+library(here)
+library(tidyverse)
+library(stars)
+library(sf)
+library(tmap)
+library(viridisLite)
+
+```
+
+```{r}
+# Load in data
+ei_points <- sf::read_sf(here::here("data", "easter_island", "ei_points.gpkg"))
+volcanoes <- subset(ei_points, type == "volcano")
+ei_elev <- stars::read_stars(here::here("data", "easter_island", "ei_elev.tif"))
+ei_borders <- sf::read_sf(here::here("data", "easter_island", "ei_border.gpkg"))
+ei_roads <- sf::read_sf(here::here("data", "easter_island", "ei_roads.gpkg"))
+```
+
+```{r}
+# interactive viewing
+tmap_mode("view")
+
+#map making!
+tm_shape(ei_elev) + #elevation
+  tm_raster(style = "cont",
+            palette = viridis(8)) +
+tm_shape(ei_borders) + # borders
+  tm_borders()  +
+  tm_shape (ei_points) + #
+  tm_dots(size = 0.1) +
+    tm_shape(volcanoes) +
+  tm_bubbles(size = 0.1,
+             col = 'red',
+             title.size = "Volcanoes") +
+  tm_shape(ei_roads) +
+  tm_lines(col = 'grey') 
+
+
+```
+
+
+
+
